@@ -1,0 +1,16 @@
+set pagination off
+
+b 20
+command 1
+		printf "@@@%d, %d, %d\n", M, N, S
+		cont
+end
+
+b 21 if i % 5 == 0
+command 2
+		printf "@@@%d\n", i
+		cont
+end
+
+run 1 12 > /dev/null
+quit

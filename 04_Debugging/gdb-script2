@@ -1,0 +1,20 @@
+set pagination off
+
+b 20
+command 1
+		printf "@@@%d, %d, %d\n", M, N, S
+		cont
+end
+
+set $k = 0
+b 21
+command 2
+		set $k = $k + 1
+		if $k >= 28 && $k <= 35
+			printf "@@@%d\n", i
+		end
+		cont
+end
+
+run -100 100 3 > /dev/null
+quit
