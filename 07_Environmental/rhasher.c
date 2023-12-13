@@ -8,9 +8,6 @@
 #include <readline/readline.h>
 #endif
 
-
-
-
 int main(int argc, char const *argv[])
 {
 	const char* msg = "message digest";

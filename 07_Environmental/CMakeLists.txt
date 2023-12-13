@@ -25,3 +25,14 @@ endif()
 
 add_executable(rhasher rhasher.c)
 target_link_libraries(rhasher ${LIBS})
+
+enable_testing()
+
+add_test(NAME test_file
+	COMMAND "${CMAKE_CURRENT_LIST_DIR}/tests/test_file.sh")
+
+add_test(NAME test_md5
+	COMMAND "${CMAKE_CURRENT_LIST_DIR}/tests/test_md5.sh")
+
+add_test(NAME test_sha1
+	COMMAND "${CMAKE_CURRENT_LIST_DIR}/tests/test_sha1.sh")
