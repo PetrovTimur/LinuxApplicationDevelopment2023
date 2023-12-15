@@ -1,0 +1,11 @@
+--- maze.c	2023-12-15 00:25:35.545581633 +0000
++++ maze1.c	2023-12-15 00:37:44.438266365 +0000
+@@ -10,7 +10,7 @@
+ 
+ int main(int argc, char const *argv[])
+ {
+-	int N = 6;
++	int N = atoi(argv[1]);
+ 	char wall = '#';
+ 	char path = '.';
+ 

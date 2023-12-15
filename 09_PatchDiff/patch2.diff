@@ -1,0 +1,15 @@
+--- maze.c	2023-12-15 00:25:35.545581633 +0000
++++ maze2.c	2023-12-15 00:41:57.091931544 +0000
+@@ -10,9 +10,9 @@
+ 
+ int main(int argc, char const *argv[])
+ {
+-	int N = 6;
+-	char wall = '#';
+-	char path = '.';
++	int N = atoi(argv[2]);
++	char wall = argv[1][1];
++	char path = argv[1][0];
+ 
+ 	srandom(time(NULL));
+ 	int x = random() % N;
