@@ -1,0 +1,50 @@
+# Russian translations for LinuxApplicationDevelopment package.
+# Copyright (C) 2023 THE LinuxApplicationDevelopment'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the LinuxApplicationDevelopment package.
+#  <s02200459@gse.cs.msu.ru>, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: LinuxApplicationDevelopment 2023\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-12-22 20:28+0000\n"
+"PO-Revision-Date: 2023-12-21 23:37+0000\n"
+"Last-Translator:  <s02200459@gse.cs.msu.ru>\n"
+"Language-Team: Russian <gnu@d07.ru>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: guess.c:16
+msgid "Gueeser -- a minimal program that guesses your number between 1 and 100"
+msgstr "Угадайка -- минимальная программа, угадывающая ваше число от 1 до 100"
+
+#: guess.c:19
+msgid "Use roman numerals"
+msgstr "Использовать римские цифры"
+
+#: guess.c:92
+#, c-format
+msgid "Pick a number between %s and %s\n"
+msgstr "Загадайте число от %s до %s\n"
+
+#: guess.c:99
+#, c-format
+msgid "Is your number more than %s? [yes/no]\t\t"
+msgstr "Ваше число больше чем %s? [да/нет]\t\t"
+
+#: guess.c:105
+msgid "yes"
+msgstr "да"
+
+#: guess.c:107
+msgid "no"
+msgstr "нет"
+
+#: guess.c:114
+#, c-format
+msgid "Your number is: %s\n"
+msgstr "Ваше число: %s\n"
