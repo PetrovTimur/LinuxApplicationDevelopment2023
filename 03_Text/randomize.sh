@@ -26,6 +26,7 @@ do
 done < <(printf  "%s\n" "$raw")
 
 data=`echo "$data" | head -n -1 | shuf`
+default=0.05
 
 tput reset
 while IFS= read -r line; do
@@ -35,7 +36,7 @@ while IFS= read -r line; do
     symbol=${line[2]}
 
     tput cup $row $col
-    sleep $1
+    sleep ${1:-$default}
 
     echo -e "\u$symbol"
 
