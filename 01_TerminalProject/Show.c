@@ -1,167 +1,92 @@
 #include <ncurses.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
 #include <locale.h>
 
 #define DX 3
 
 int main(int argc, char* argv[]) {
         if (argc < 2) {
-                printf("Too few arguments\n");
+                printf("Too few arguments. Specify path to file you wan to display\n");
                 return 1;
         }
 
         setlocale(LC_ALL, "");
 
         FILE *f = fopen(argv[1], "rt");
-        int fd = fileno(f);
 
-        struct stat buf;
-        fstat(fd, &buf);
-        off_t size = buf.st_size;
+        int line_count = 0, i = 0;
 
-        // printf("%ld\n", size);
-        // char *data = (char*) malloc(size + 1);
-        // size_t result = fread(data, 1, size, f);
-        // printf("%ld\n", result);
-        // // printf("%c, %d\n", data[size-3], data[size-1]);
-        // data[size] = EOF;
-
-        // fseek(f, 0, SEEK_SET);
-
-        int count = 0, i = 0, maxlen = 0;
-        // char ch;
-        // while (data[i] != EOF) {
-        //         if (data[i] == '\n')
-        //                 count++;
-        //         i++;
-        //         // printf("%d\n", i);
-        // }
-
-        // count++;
-        // printf("lines: %d\n", count);
-
-        // count
-        // char *lines[count];
-
-        char *buffer;
         size_t bufsize = 100;
-        size_t characters;
-
-        i = 0;
-        // return 0;
-        // lines[0] = (char*) malloc(bufsize * sizeof(char));
-        buffer = (char *)malloc(bufsize * sizeof(char));
+        char *buffer = (char *)malloc(bufsize * sizeof(char));
 
         int len;
         while ((len = getline(&buffer, &bufsize, f)) != -1) {
-                // fputs(buffer, stdout);
-                maxlen = len > maxlen ? len : maxlen;
                 i++;
-                // lines[i] = (char*) malloc(100);
         }
 
-        // printf("lines: %d, maxlen: %d\n", i, maxlen);
-        maxlen++;
-        
-        char *lines[i];
-        int lens[i];
+
+        line_count = i;
+
         fseek(f, 0, SEEK_SET);
 
-        for (int p = 0; p < i; p++) {
-                lines[p] = (char *) malloc(bufsize * sizeof(char));
-        }
+        char *lines[line_count];
 
+        for (i = 0; i < line_count; i++) {
+                lines[i] = (char *) malloc(bufsize * sizeof(char));
+                len = getline(&(lines[i]), &bufsize, f);
+                lines[i][strcspn(lines[i], "\n")] = '\0';
 
-        i = 0;
-        while ((len = getline(&(lines[i]), &bufsize, f)) != -1) {
-                lens[i] = len;
-                // strncpy(lines[i], buffer, maxlen);
-                // fputs(buffer, stdout);
-                // fputs(lines[i], stdout);
-                // printf("%d, %d\n", len, lines[i][maxlen]);
-                // int succ = strncpy
-                i++;
-                // lines[i] = (char*) malloc(100);
-        }
-
-        count = i;
-        for (i = 0; i < count; i++) {
-                // printf("%c: %d\n", lines[1][i], lines[1][i]);
-                // printf("%d: %d\n", i, lens[i]);
-                // fputs(lines[i], stdout);
-                // printf("%c\n", lines[i][maxlen - 2]);
         }
 
         WINDOW *win;
         int c = 0;
-        // printf("%s\n\n\n", "hi");
 
         initscr();
         noecho();
         cbreak();
-        printw("Window:");
+        mvprintw(0, 0, "File: %s, lines: %d", argv[1], line_count);
         refresh();
 
+        int width = COLS - 2 * DX, height = LINES - 2 * DX - 2;
         win = newwin(LINES-2*DX, COLS-2*DX, DX, DX);
         keypad(win, TRUE);
         scrollok (win, TRUE);
         box(win, 0, 0); 
         wmove(win, 1, 0);
 
-        printf("%s\n", argv[1]);
+        int line = 0, offset = 0;
 
-        int width = COLS - 2 * DX - 2;
-        int height = LINES - 2 * DX;
-        char line[width];
-
-        // printf("count = %d\n", count);
-        i = 0;
-        int result;
-        int j = 0;
-        while((c = wgetch(win)) != 27) {
-                // wclear(win);
-                // box(win, 1, 1);
-                if ((c == KEY_DOWN) && (i < count - height)) {
-                        // printf("%d, %d, %d\n", i, count, height);
-                        i++;
-                        // printf("%d\n", i);
-                } else if ((c == KEY_RIGHT) && (j < maxlen - width)) {
-                        j++;
-                } else if ((c == KEY_LEFT) && (j > 0)) {
-                        j--;
-                } else if ((c == KEY_UP) && (i > 0)) {
-                        i--;
-                }
-                for (int k = i; k < height + i; k++) {
-                        result = snprintf(line, width, "%d: %s", k, lines[k] + j);
-                        // printf("%d\n", result);
-
-                        // if (result == width) {
-                        //         line[width - 1] = "\n";
-                        // }
-
-                        // int length = lens[k];
-                        // if (length - j >= width) {
-                        //         result = snprintf(line, width, " %d: %s", k, lines[k] + j);
-                        //         printf("%d\n", result);
-                        //         line[width - 1] = '\n';
-                        // } else {
-                        //         if (j >= length) {
-                        //                 result = snprintf(line, width, " %d: %s", k, lines[k] + lens[k] - 1);
-                        //         } else {
-                        //                 result = snprintf(line, width, " %d: %s", k, lines[k] + j);
-                        //         }
-                        // }
-                        mvwprintw(win, k - i + 1, 1, line);
-                }
-                box(win, 0, 0); 
+        while (1) {
+                werase(win);
+                box(win, 0, 0);
                 wrefresh(win);
+
+                for (i = 1; i <= height; i++) {
+                        mvwprintw(win, i, 1, "%5d: %.*s", line + i, width - 10, lines[line + i] + offset);
+                }
+
+                c = wgetch(win);
+                if (c == 27)
+                        break;
+
+                switch(c) {
+                case KEY_DOWN: line = ((line + height + 2) > line_count) ? line : line + 1; break;
+                case KEY_UP: line = ((line < 1) ? line : line - 1); break;
+                case KEY_RIGHT: offset++; break;
+                case KEY_LEFT: offset = ((offset < 1) ? offset: offset - 1); break;
+                case KEY_NPAGE: line = ((line + 2 * height + 1) > line_count) ? line_count - height - 1 : line + height;; break;
+                case KEY_PPAGE: line = ((line < height) ? 0 : line - height); break;
+                default: continue;
+                }
         }
+
         endwin();
 
-        // free(data);
+        for (i = 0; i < line_count; i++) {
+                free(lines[i]);
+        }
+        free(buffer);
         fclose(f);
 
         return 0;
