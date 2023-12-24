@@ -27,6 +27,7 @@ int main(int argc, char const *argv[])
 	struct stat file_status;
 	if (stat(argv[1], &file_status) < 0) {
         perror("Error. Could not get input file size");
+        remove(argv[2]);
         return 3;
     }
     long infile_size = file_status.st_size;
@@ -39,11 +40,13 @@ int main(int argc, char const *argv[])
 	while (!feof(f_in)) {
 		bytes_read = fread(buffer, sizeof(char), nmemb, f_in);
 		if (ferror(f_out)) {
+			remove(argv[2]);
 			perror("Error. Could not write to outfile");
 			return 4;
 		}
 
 		if (fwrite(buffer, sizeof(char), bytes_read, f_out) != bytes_read) {
+			remove(argv[2]);
 			fprintf(stderr, "%s\n", "Error. Could not write enough bytes");
 			return 5;
 		}
@@ -52,11 +55,13 @@ int main(int argc, char const *argv[])
 	}
 
 	if (ferror(f_in)) {
+		remove(argv[2]);
 		perror("Error. Could not read from infile");
 		return 6;
 	}
 
     if (infile_size != total_bytes * sizeof(char)) {
+    	remove(argv[2]);
     	fprintf(stderr, "%s\n", "Error. File sizes do not match. Abort moving");
     	return 7;
     }
