@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.22)
 project(RHasher)
 
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 
 option(USE_READLINE "Use readline function" ON)
 if (USE_READLINE)
@@ -36,3 +37,8 @@ add_test(NAME test_md5
 
 add_test(NAME test_sha1
 	COMMAND "${CMAKE_CURRENT_LIST_DIR}/tests/test_sha1.sh")
+
+add_custom_target(clear-all
+	COMMAND git clean -qxdf
+	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)

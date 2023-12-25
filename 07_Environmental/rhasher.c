@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <errno.h>
 #include "rhash.h"
 
 #ifdef USE_READLINE
@@ -10,8 +11,7 @@
 
 int main(int argc, char const *argv[])
 {
-	const char* msg = "message digest";
-	char digest[64];
+	unsigned char *digest = (unsigned char *) malloc(64 * sizeof(unsigned char));
 	char output[130];
 
 	rhash_library_init();
@@ -45,20 +45,31 @@ int main(int argc, char const *argv[])
 			code = RHASH_SHA1;
 		else if (strcasecmp(arg1, "tth") == 0)
 			code = RHASH_TTH;
-		else
-			printf("%s\n", "err");
+		else {
+			fprintf(stderr, "%s\n", "Error. Please enter valid hash type: MD5, SHA1, TTH.");
+			return 1;
+		}
 
 		if (arg2[0] == '\"') {
 			const char *delim2 = "\"";
 			char *msg = strtok(arg2, delim2);
-			int res = rhash_msg(code, msg, strlen(msg), digest);
+			if (rhash_msg(code, msg, strlen(msg), digest) < 0) {
+				perror("Error. Could not generate hash");
+				return 2;
+			}
 			arg2 = (char *) malloc(strlen(msg) + 3);
-			int k = snprintf(arg2, strlen(msg) + 3, "\"%s\"", msg);
+			snprintf(arg2, strlen(msg) + 3, "\"%s\"", msg);
 		} else {
-			int res = rhash_file(code, arg2, digest);
+			if (rhash_file(code, arg2, digest) < 0) {
+				perror("Error. Could not generate hash");
+				return 2;
+			}
 		}
 
-		rhash_print_bytes(output, digest, rhash_get_digest_size(code), FLAGS);
+		if (!rhash_print_bytes(output, digest, rhash_get_digest_size(code), FLAGS)) {
+			fprintf(stderr, "%s\n", "Error. Could not print hash to buffer.");
+			return 3;
+		}
 
 		printf("%s (%s) = %s\n", rhash_get_name(code), arg2, output);
 	}
