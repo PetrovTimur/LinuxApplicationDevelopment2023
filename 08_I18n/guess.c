@@ -9,7 +9,7 @@
 int main(int argc, char const *argv[])
 {
 
-	bindtextdomain("messages", "../locale");
+	bindtextdomain("messages", TEXTDOMAINDIR);
 	textdomain("messages");
 	setlocale(LC_ALL, "");
 
