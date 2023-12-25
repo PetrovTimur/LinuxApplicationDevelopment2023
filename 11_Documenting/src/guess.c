@@ -1,7 +1,3 @@
-/** @mainpage Minimal program that guesses your number
- * @copydetails guesser
- */
-
 /** @page guesser Minimal program that guesses your number
  * Random number guesser
  * @section SYNOPSIS
