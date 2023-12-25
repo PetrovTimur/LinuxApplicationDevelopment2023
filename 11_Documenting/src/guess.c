@@ -5,7 +5,7 @@
 /** @page guesser Minimal program that guesses your number
  * Random number guesser
  * @section SYNOPSIS
- * `namegen` \a pattern [ \a number ]
+ * `guess` [ \a OPTION ]
  * @section DESCRIPTION
  * Guess user-picked number by asking simple yes/no questions.
  *
@@ -121,7 +121,7 @@ int main(int argc, char **argv)
 	arguments.roman = 0;
 	argp_parse (&argp, argc, argv, 0, 0, &arguments);
 
-	bindtextdomain("messages", "../locale");
+	bindtextdomain("messages", TEXTDOMAINDIR);
 	textdomain("messages");
 	setlocale(LC_ALL, "");
 
