@@ -25,3 +25,9 @@ Then go to http://localhost:8000 in your browser.
 ```
 ./guess [OPTION]
 ```
+
+### Clean
+
+```
+cd .. && rm -rf build
+```
